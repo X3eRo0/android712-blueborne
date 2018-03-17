@@ -1,4 +1,7 @@
 # android712-blueborne
+
+For testing purposes removed the CVE-2017-0781 pathces and compiled 7.1.2 (LineageOS CM 14.1) on my Samsung S3 Neo+ GT-9301I
+
 Android Blueborne RCE CVE-2017-0781
 
 Tricky to pull off.... not reliable.
