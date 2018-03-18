@@ -4,7 +4,7 @@ For testing purposes removed the CVE-2017-0781 pathces and compiled 7.1.2 (Linea
 
 Android Blueborne RCE CVE-2017-0781
 
-Tricky to pull off.... not reliable. Since you have to know REMOTE_NAME address, as well as defeate ALSR.
+Tricky to pull off.... not reliable. Since you have to know REMOTE_NAME address, as well as defeat ALSR.
 
 Control r4 register which is REMOTE_NAME
 
