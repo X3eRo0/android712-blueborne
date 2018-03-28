@@ -2466,3 +2466,11 @@ python exp.py hci0 84:55:A5:B6:6F:F6
 
 
 ```
+
+On mobile
+
+```
+s3ve3g:/data/local/tmp # ls
+apt.conf.owMBvd  apt.data.HdUevr  apt.sig.kv2PHc  test  
+s3ve3g:/data/local/tmp #
+```
