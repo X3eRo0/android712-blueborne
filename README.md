@@ -2797,3 +2797,73 @@ drwxr-x--x 3 root  root  4096 2014-01-22 00:36 ..
 s3ve3g:/ #
 ```
 
+More info:
+
+We control R4 via REMOTE_NAME here, starting from 0xacec41be. Disassemble on different execution, so addresses are different, than logs above.
+
+```
+(gdb) disass
+Dump of assembler code for function btu_hci_msg_ready:
+   0xacec41b8 <+0>:	push	{r4, lr}
+   0xacec41ba <+2>:	bl	0xaced7ecc <fixed_queue_dequeue>
+   0xacec41be <+6>:	mov	r4, r0
+=> 0xacec41c0 <+8>:	ldrh	r1, [r4, #0]
+   0xacec41c2 <+10>:	bic.w	r0, r1, #255	; 0xff
+   0xacec41c6 <+14>:	cmp.w	r0, #5632	; 0x1600
+   0xacec41ca <+18>:	bge.n	0xacec41e8 <btu_hci_msg_ready+48>
+   0xacec41cc <+20>:	cmp.w	r0, #4096	; 0x1000
+   0xacec41d0 <+24>:	beq.n	0xacec4202 <btu_hci_msg_ready+74>
+   0xacec41d2 <+26>:	cmp.w	r0, #4352	; 0x1100
+   0xacec41d6 <+30>:	beq.n	0xacec422c <btu_hci_msg_ready+116>
+   0xacec41d8 <+32>:	cmp.w	r0, #4608	; 0x1200
+   0xacec41dc <+36>:	bne.n	0xacec424c <btu_hci_msg_ready+148>
+   0xacec41de <+38>:	mov	r0, r4
+   0xacec41e0 <+40>:	ldmia.w	sp!, {r4, lr}
+   0xacec41e4 <+44>:	b.w	0xace968a4 <btm_route_sco_data>
+   0xacec41e8 <+48>:	beq.n	0xacec4236 <btu_hci_msg_ready+126>
+   0xacec41ea <+50>:	cmp.w	r0, #6400	; 0x1900
+   0xacec41ee <+54>:	beq.n	0xacec4242 <btu_hci_msg_ready+138>
+   0xacec41f0 <+56>:	cmp.w	r0, #5888	; 0x1700
+   0xacec41f4 <+60>:	bne.n	0xacec424c <btu_hci_msg_ready+148>
+   0xacec41f6 <+62>:	ldr	r1, [r4, #8]
+---Type <return> to continue, or q <return> to quit---
+   0xacec41f8 <+64>:	mov	r0, r4
+   0xacec41fa <+66>:	blx	r1
+   0xacec41fc <+68>:	ldr	r0, [pc, #92]	; (0xacec425c <btu_hci_msg_ready+164>)
+   0xacec41fe <+70>:	add	r0, pc
+   0xacec4200 <+72>:	b.n	0xacec4214 <btu_hci_msg_ready+92>
+   0xacec4202 <+74>:	uxtb	r0, r1
+   0xacec4204 <+76>:	mov	r1, r4
+   0xacec4206 <+78>:	bl	0xacec3480 <btu_hcif_process_event>
+   0xacec420a <+82>:	mov	r0, r4
+   0xacec420c <+84>:	bl	0xaced6d68 <osi_free>
+   0xacec4210 <+88>:	ldr	r0, [pc, #68]	; (0xacec4258 <btu_hci_msg_ready+160>)
+   0xacec4212 <+90>:	add	r0, pc
+   0xacec4214 <+92>:	ldr	r0, [r0, #0]
+   0xacec4216 <+94>:	movw	r1, #10018	; 0x2722
+   0xacec421a <+98>:	ldrh	r1, [r0, r1]
+   0xacec421c <+100>:	ldrh	r0, [r0, #2]
+   0xacec421e <+102>:	cmp	r0, r1
+   0xacec4220 <+104>:	it	ne
+   0xacec4222 <+106>:	popne	{r4, pc}
+   0xacec4224 <+108>:	ldmia.w	sp!, {r4, lr}
+   0xacec4228 <+112>:	b.w	0xacde5910 <bte_main_lpm_allow_bt_device_sleep>---Type <return> to continue, or q <return> to quit---
+
+   0xacec422c <+116>:	mov	r0, r4
+   0xacec422e <+118>:	ldmia.w	sp!, {r4, lr}
+   0xacec4232 <+122>:	b.w	0xacec6638 <l2c_rcv_acl_data>
+   0xacec4236 <+126>:	uxtb	r0, r1
+   0xacec4238 <+128>:	mov	r1, r4
+   0xacec423a <+130>:	ldmia.w	sp!, {r4, lr}
+   0xacec423e <+134>:	b.w	0xacec3c3c <btu_hcif_send_cmd>
+   0xacec4242 <+138>:	mov	r0, r4
+   0xacec4244 <+140>:	ldmia.w	sp!, {r4, lr}
+   0xacec4248 <+144>:	b.w	0xacecf76c <l2c_link_segments_xmitted>
+   0xacec424c <+148>:	mov	r0, r4
+   0xacec424e <+150>:	ldmia.w	sp!, {r4, lr}
+   0xacec4252 <+154>:	b.w	0xaced6d68 <osi_free>
+   0xacec4256 <+158>:	nop
+   0xacec4258 <+160>:	andeq	r5, r7, r2, asr #19
+   0xacec425c <+164>:	ldrdeq	r5, [r7], -r6
+End of assembler dump.
+```
