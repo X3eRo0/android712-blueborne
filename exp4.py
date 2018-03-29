@@ -23,7 +23,7 @@ BLUETOOTH_BSS_SOME_VAR_OFFSET = 0x7f67d
 
 MAX_BT_NAME = 0xf5
 
-# Payload details (attacker IP should be accessible over the internet for the victim phone)
+# Payload details
 SHELL_SCRIPT = b'touch /data/local/tmp/test'
 
 
