@@ -2883,3 +2883,9 @@ Dump of assembler code for function btu_hci_msg_ready:
    0xacec425c <+164>:	ldrdeq	r5, [r7], -r6
 End of assembler dump.
 ```
+
+
+Stay secure!
+
+Update your Android or get a new Mobile if you cannot update it, receive new updates!
+
