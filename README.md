@@ -2,6 +2,16 @@
 
 Android Blueborne RCE CVE-2017-0781
 
+In November 2017 a company called Armis published a proof of concept (PoC) of a remote code execution vulnerability in Android via Bluetooth (CVE-2017-0781), known as BlueBorne. Although BlueBorne refers to a set of 8 vulnerabilities, this PoC in this article uses only 2 of them to achieve its goal.
+
+BlueBorne only requires that a Bluetooth connection on a device be active. No user action is required, with devices not even needing to be paired. All a hacker needs to do is be in Bluetooth range of your device to take it over.
+
+
+The exploitation process is divided into 2 phases, first the memory leak vulnerability (CVE-2017-0785) is used to know the memory addresses and bypass the ASLR protection, and thus make a call to the function libc library system and execute code on the phone, create a file.
+
+In this article I want to show that it is possible to execute and/or take over a affected phone (those without BlueBorne patch, without Android’s September 2017 security patch)
+
+If you are interested below are the debugger logs and exection log, along with proof of payload exection.
 
 For testing purposes removed the CVE-2017-0781 patches and compiled Android 7.1.2 (LineageOS CM 14.1) on my Samsung S3 Neo+ GT-9301I
 
