@@ -7,9 +7,9 @@ In November 2017 a company called Armis published a proof of concept (PoC) of a 
 BlueBorne only requires that a Bluetooth connection on a device be active. No user action is required, with devices not even needing to be paired. All a hacker needs to do is be in Bluetooth range of your device to take it over.
 
 
-The exploitation process is divided into 2 phases, first the memory leak vulnerability (CVE-2017-0785) is used to know the memory addresses and bypass the ASLR protection, and thus make a call to the function libc library system and execute code on the phone, create a file.
+The exploitation process is divided into 2 phases, first the memory leak vulnerability (CVE-2017-0785) is used to know the memory addresses and bypass the ASLR protection, and thus make a call to the function libc library system and execute code on the phone, create a file ("/data/local/tmp/test"). You can change the payload what you want, including making the Mobile connect to you (reverse shell)
 
-In this article I want to show that it is possible to execute and/or take over a affected phone (those without BlueBorne patch, without Android’s September 2017 security patch)
+In this article I want to show that it is possible to execute and/or take over an affected phone (those without BlueBorne patch, without Android’s September 2017 security patch)
 
 If you are interested below are the debugger logs and exection log, along with proof of payload exection.
 
