@@ -1,13 +1,16 @@
 # android712-blueborne
 
-For testing purposes removed the CVE-2017-0781 pathces and compiled 7.1.2 (LineageOS CM 14.1) on my Samsung S3 Neo+ GT-9301I
+For testing purposes removed the CVE-2017-0781 patches and compiled Android 7.1.2 (LineageOS CM 14.1) on my Samsung S3 Neo+ GT-9301I
+
+More info here:
+
+https://github.com/marcinguy/S3NEO--GT301I
+
 
 Android Blueborne RCE CVE-2017-0781
 
 
-
-
-After dozen of executions got this condition in:
+After dozen of executions got this condition in. Each execution is around 2-3 sec. So you can own/take over the mobile in less than a half of the minute.
 
 
 ```asm
